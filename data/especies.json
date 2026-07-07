@@ -1,0 +1,26 @@
+[
+  {
+    "nombre_comun": "Nutria marina",
+    "nombre_cientifico": "Lontra felina",
+    "habitat": "Costas rocosas del Pacífico sur, incluyendo el litoral chileno.",
+    "estado_conservacion": "En peligro",
+    "descripcion": "También conocida como 'chungungo'. Es un mamífero clave para el ecosistema de bosques de algas, ya que controla poblaciones de erizos que de otro modo destruirían el kelp.",
+    "dato_curioso": "Puede pasar hasta 24 horas fuera del agua descansando entre rocas."
+  },
+  {
+    "nombre_comun": "Jaiba mora",
+    "nombre_cientifico": "Homalaspis plana",
+    "habitat": "Fondos rocosos y arenosos de la costa chilena.",
+    "estado_conservacion": "Preocupación menor",
+    "descripcion": "Crustáceo común en el intermareal chileno, importante recurso pesquero artesanal y parte clave de la cadena alimentaria costera.",
+    "dato_curioso": "Cambia de caparazón varias veces a lo largo de su vida para poder crecer."
+  },
+  {
+    "nombre_comun": "Ballena azul",
+    "nombre_cientifico": "Balaenoptera musculus",
+    "habitat": "Aguas del golfo de Corcovado y el sur de Chile en temporada de alimentación.",
+    "estado_conservacion": "En peligro",
+    "descripcion": "El animal más grande que ha existido en la Tierra. El golfo de Corcovado es uno de los pocos sitios de alimentación conocidos en el hemisferio sur.",
+    "dato_curioso": "Su corazón puede pesar tanto como un auto pequeño."
+  }
+]
