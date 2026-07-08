@@ -1,11 +1,115 @@
 [
   {
+    "nombre_comun": "Ballena azul",
+    "nombre_cientifico": "Balaenoptera musculus",
+    "habitat": "Aguas oceánicas frías a templadas, con alta disponibilidad de kril. En Chile se avista en Chiloé, Golfo de Corcovado, norte de Aysén, Queilen y Melinka.",
+    "estado_conservacion": "En Peligro (IUCN y MMA Chile)",
+    "descripcion": "Es el animal más grande que ha existido en la Tierra, con hasta 30 metros de largo. Cuerpo largo y delgado de color gris azulado, con una aleta dorsal muy pequeña hacia el extremo posterior. Se alimenta principalmente de kril y utiliza aguas chilenas como zona de alimentación en el verano austral.",
+    "dato_curioso": "Sus vocalizaciones pueden escucharse a más de 1.000 km de distancia bajo el agua."
+  },
+  {
+    "nombre_comun": "Ballena jorobada",
+    "nombre_cientifico": "Megaptera novaeangliae",
+    "habitat": "Aguas costeras y oceánicas, especialmente cerca de islas o zonas de surgencia. En Chile se avista en el Estrecho de Magallanes, Canal Beagle, Chañaral, Punta de Choros y Arica.",
+    "estado_conservacion": "Vulnerable (MMA Chile) / Preocupación Menor (IUCN)",
+    "descripcion": "También llamada rorcual jorobado, se identifica por sus aletas pectorales extremadamente largas (hasta un tercio de su cuerpo) y una joroba evidente delante de la aleta dorsal. Se alimenta de pequeños peces como sardinas y anchovetas, además de kril, y es muy conocida por su comportamiento acrobático.",
+    "dato_curioso": "Los machos cantan canciones complejas, y cada ballena puede identificarse individualmente por el patrón de manchas en la parte inferior de su aleta caudal."
+  },
+  {
+    "nombre_comun": "Ballena sei",
+    "nombre_cientifico": "Balaenoptera borealis",
+    "habitat": "Aguas oceánicas abiertas y algunas zonas costeras productivas del centro-sur de Chile, Chiloé, Aysén y el Golfo de Penas.",
+    "estado_conservacion": "En Peligro (IUCN y MMA Chile)",
+    "descripcion": "También conocida como rorcual de Rudolphi o rorcual boreal, tiene un cuerpo delgado y aerodinámico, con una aleta dorsal alta y curvada bien visible. Se alimenta de zooplancton, principalmente copépodos y kril.",
+    "dato_curioso": "Puede alcanzar hasta 50 km/h, siendo una de las ballenas más rápidas del océano."
+  },
+  {
+    "nombre_comun": "Ballena de Bryde",
+    "nombre_cientifico": "Balaenoptera edeni",
+    "habitat": "Aguas cálidas costeras y oceánicas con alta productividad, en zonas costeras del norte y centro de Chile como Coquimbo, Valparaíso y el Golfo de Arauco.",
+    "estado_conservacion": "Datos Insuficientes (IUCN) / No clasificada (MMA Chile)",
+    "descripcion": "También llamada rorcual tropical, se reconoce por tener tres crestas en la parte superior del rostro y una aleta dorsal prominente y curvada. Se alimenta de peces pequeños, calamares y zooplancton.",
+    "dato_curioso": "Es una de las pocas ballenas barbadas que vive todo el año en zonas tropicales y templadas, y rara vez muestra la cola al sumergirse."
+  },
+  {
+    "nombre_comun": "Ballena fin",
+    "nombre_cientifico": "Balaenoptera physalus",
+    "habitat": "Aguas oceánicas frías a templadas, con presencia registrada en la Reserva Marina Isla Chañaral.",
+    "estado_conservacion": "En Peligro (MMA Chile) / Vulnerable (IUCN)",
+    "descripcion": "Cuerpo muy largo y estilizado, con una característica coloración asimétrica en la mandíbula (blanca del lado derecho, oscura del lado izquierdo). Se alimenta de kril, copépodos y pequeños peces.",
+    "dato_curioso": "Es el segundo animal más grande del planeta, después de la ballena azul."
+  },
+  {
+    "nombre_comun": "Lobo marino común",
+    "nombre_cientifico": "Otaria flavescens",
+    "habitat": "Costas rocosas, playas abiertas, islotes y zonas portuarias a lo largo de todo Chile, con colonias en Valparaíso, Chañaral, Chiloé y Punta Arenas.",
+    "estado_conservacion": "Preocupación Menor (IUCN y MMA Chile)",
+    "descripcion": "También conocido como león marino o lobo marino sudamericano. Los machos tienen una gran melena y son bastante más grandes que las hembras. Se alimenta de peces, cefalópodos y ocasionalmente crustáceos, y forma grandes colonias muy sociables.",
+    "dato_curioso": "Es común verlos en muelles y caletas de ciudades costeras chilenas, donde tienen una fuerte jerarquía social durante la reproducción."
+  },
+  {
     "nombre_comun": "Chungungo",
     "nombre_cientifico": "Lontra felina",
-    "habitat": "Costas rocosas del Pacífico sur, incluyendo el litoral chileno.",
-    "estado_conservacion": "En peligro de extinción",
-    "descripcion": "El chungungo es una nutria marina que vive en las costas rocosas de Chile y está en peligro de extinción. Es un mamífero clave para el ecosistema de bosques de algas, ya que controla poblaciones de erizos que de otro modo destruirían el kelp.",
-    "dato_curioso": "Puede pasar hasta 24 horas fuera del agua descansando entre rocas."
+    "habitat": "Costas rocosas con cuevas, bosques de algas y zonas de rompiente, desde el norte hasta el sur de Chile (Chañaral, Caleta Chome, Chiloé, Aysén).",
+    "estado_conservacion": "En Peligro de extinción (IUCN y MMA Chile)",
+    "descripcion": "El chungungo (también llamado chinchimén o gatito de mar) es una nutria marina pequeña, de pelaje denso y oscuro, muy ágil en el agua pero esquiva y poco visible. Se alimenta de peces, crustáceos y moluscos.",
+    "dato_curioso": "Es la nutria más marina del mundo y funciona como un indicador de la salud de los ecosistemas costeros donde vive."
+  },
+  {
+    "nombre_comun": "Orca",
+    "nombre_cientifico": "Orcinus orca",
+    "habitat": "Aguas costeras y oceánicas, incluyendo fiordos y canales, en el Estrecho de Magallanes, los canales australes y ocasionalmente en el norte de Chile.",
+    "estado_conservacion": "Datos Insuficientes (IUCN) / No evaluada (MMA Chile)",
+    "descripcion": "Se reconoce fácilmente por su distintivo color blanco y negro, y su cabeza redondeada sin pico. Es un depredador tope muy inteligente, que se alimenta de mamíferos marinos, peces, aves marinas y rayas.",
+    "dato_curioso": "Caza en grupo con estrategias cooperativas, y algunas poblaciones tienen dietas altamente especializadas."
+  },
+  {
+    "nombre_comun": "Delfín nariz de botella",
+    "nombre_cientifico": "Tursiops truncatus",
+    "habitat": "Aguas costeras templadas y cálidas, bahías y desembocaduras, presente en todo Chile costero.",
+    "estado_conservacion": "Preocupación Menor (IUCN y MMA Chile)",
+    "descripcion": "Tiene un pico corto y curvo, y un cuerpo robusto de color gris. Es muy sociable y activo, y se alimenta de peces y calamares.",
+    "dato_curioso": "Suele acercarse a embarcaciones y saltar cerca de ellas, e incluso puede formar grupos mixtos con otras especies de delfines."
+  },
+  {
+    "nombre_comun": "Delfín chileno",
+    "nombre_cientifico": "Cephalorhynchus eutropia",
+    "habitat": "Zonas costeras protegidas, estuarios y fiordos del sur de Chile, desde Valdivia hasta Magallanes, especialmente en Chiloé y Aysén.",
+    "estado_conservacion": "Casi Amenazado (IUCN y MMA Chile)",
+    "descripcion": "También conocido como tonina negra, es un delfín pequeño y robusto, con una aleta dorsal triangular y cabeza sin pico definido. Se alimenta de peces, crustáceos y cefalópodos.",
+    "dato_curioso": "Es una especie endémica de Chile, difícil de observar porque casi no salta y es muy sensible a las alteraciones costeras."
+  },
+  {
+    "nombre_comun": "Delfín austral",
+    "nombre_cientifico": "Cephalorhynchus australis",
+    "habitat": "Aguas frías costeras, fiordos y canales de Aysén y Magallanes.",
+    "estado_conservacion": "Preocupación Menor (IUCN y MMA Chile)",
+    "descripcion": "Se reconoce por su coloración en blanco, gris y negro, y un pico corto. Vive en pequeños grupos y se alimenta de peces, calamares y crustáceos.",
+    "dato_curioso": "Es muy activo, saltador y curioso, y suele interactuar con embarcaciones en las zonas australes."
+  },
+  {
+    "nombre_comun": "Delfín de Risso",
+    "nombre_cientifico": "Grampus griseus",
+    "habitat": "Aguas oceánicas y profundas cercanas al talud continental, desde el norte de Chile hasta la Patagonia.",
+    "estado_conservacion": "Preocupación Menor (IUCN y MMA Chile)",
+    "descripcion": "También llamado delfín gris o calderón gris, tiene un cuerpo robusto y cabeza redondeada sin pico, con abundantes cicatrices blancas en los adultos. Se alimenta principalmente de calamares y también de peces.",
+    "dato_curioso": "Sus características cicatrices blancas se producen por interacciones sociales y con sus presas durante inmersiones profundas."
+  },
+  {
+    "nombre_comun": "Cachalote",
+    "nombre_cientifico": "Physeter macrocephalus",
+    "habitat": "Océano abierto y profundo, asociado a cañones submarinos y zonas de alta productividad frente al centro-sur y sur de Chile.",
+    "estado_conservacion": "Vulnerable (IUCN y MMA Chile)",
+    "descripcion": "Tiene una cabeza muy grande y cuadrada, cuerpo oscuro y robusto, y una aleta dorsal pequeña seguida de una serie de jorobas. Se alimenta principalmente de calamares gigantes y peces de profundidad.",
+    "dato_curioso": "Es el odontoceto (delfín/ballena con dientes) más grande del mundo, puede sumergirse a más de 1.000 metros de profundidad, y posee el sistema de ecolocalización más potente conocido."
+  },
+  {
+    "nombre_comun": "Marsopa espinosa",
+    "nombre_cientifico": "Phocoena spinipinnis",
+    "habitat": "Aguas costeras frías, bahías, canales y fiordos desde el centro-sur hasta el extremo austral de Chile.",
+    "estado_conservacion": "Datos Insuficientes (IUCN y MMA Chile)",
+    "descripcion": "Es una marsopa de tamaño pequeño y cuerpo robusto, de coloración oscura uniforme y aleta dorsal triangular. Se alimenta de peces pequeños, cefalópodos y crustáceos, y es muy tímida y difícil de observar.",
+    "dato_curioso": "Es una de las marsopas menos estudiadas del mundo y tiene alta vulnerabilidad a la captura incidental en redes de pesca."
   },
   {
     "nombre_comun": "Jaiba mora",
@@ -14,13 +118,5 @@
     "estado_conservacion": "Preocupación menor",
     "descripcion": "Crustáceo común en el intermareal chileno, importante recurso pesquero artesanal y parte clave de la cadena alimentaria costera.",
     "dato_curioso": "Cambia de caparazón varias veces a lo largo de su vida para poder crecer."
-  },
-  {
-    "nombre_comun": "Ballena azul",
-    "nombre_cientifico": "Balaenoptera musculus",
-    "habitat": "Aguas del golfo de Corcovado y el sur de Chile en temporada de alimentación.",
-    "estado_conservacion": "En peligro",
-    "descripcion": "El animal más grande que ha existido en la Tierra. El golfo de Corcovado es uno de los pocos sitios de alimentación conocidos en el hemisferio sur.",
-    "dato_curioso": "Su corazón puede pesar tanto como un auto pequeño."
   }
 ]
