@@ -1,9 +1,10 @@
 """
 SUMÉRGETE+ — MVP
 -----------------
-App educativa marina con dos secciones:
+App educativa marina con tres secciones:
 1. Asistente IA para docentes (chat con Claude)
 2. Fichas de especies marinas
+3. Panel estudiantes (quiz interactivo)
 
 Cómo correr localmente:
     streamlit run app.py
@@ -15,6 +16,7 @@ como:
 """
 
 import json
+import random
 import streamlit as st
 from anthropic import Anthropic
 
@@ -28,7 +30,7 @@ st.set_page_config(page_title="Sumérgete+", page_icon="🌊", layout="centered"
 # ------------------------------------------------------------------
 seccion = st.sidebar.radio(
     "Navegación",
-    ["🤖 Asistente para docentes", "🐠 Fichas de especies"],
+    ["🤖 Asistente para docentes", "🐠 Fichas de especies", "🎮 Panel estudiantes"],
 )
 
 st.sidebar.markdown("---")
@@ -83,16 +85,13 @@ def mostrar_asistente():
 
     cliente = obtener_cliente_anthropic()
 
-    # Historial de conversación guardado en la sesión del navegador
     if "mensajes" not in st.session_state:
         st.session_state.mensajes = []
 
-    # Mostrar historial previo
     for m in st.session_state.mensajes:
         with st.chat_message(m["role"]):
             st.markdown(m["content"])
 
-    # Input del usuario
     pregunta = st.chat_input("Ej: dame una actividad sobre contaminación por plásticos")
     if pregunta:
         st.session_state.mensajes.append({"role": "user", "content": pregunta})
@@ -139,9 +138,78 @@ def mostrar_fichas():
 
 
 # ------------------------------------------------------------------
+# Sección 3: Panel de estudiantes (quiz interactivo)
+# ------------------------------------------------------------------
+def generar_nueva_pregunta(especies):
+    correcta = random.choice(especies)
+    otras = [e for e in especies if e["nombre_comun"] != correcta["nombre_comun"]]
+    incorrectas = random.sample(otras, k=min(2, len(otras)))
+
+    opciones = [correcta["nombre_comun"]] + [e["nombre_comun"] for e in incorrectas]
+    random.shuffle(opciones)
+
+    st.session_state.pregunta_actual = {
+        "dato_curioso": correcta["dato_curioso"],
+        "respuesta_correcta": correcta["nombre_comun"],
+        "opciones": opciones,
+    }
+    st.session_state.respondido = False
+
+
+def mostrar_panel_estudiantes():
+    st.title("🎮 Panel estudiantes")
+    st.caption("¿Cuánto sabes de las especies marinas de Chile? ¡Pon a prueba tu conocimiento!")
+
+    especies = cargar_especies()
+
+    if "puntaje" not in st.session_state:
+        st.session_state.puntaje = 0
+    if "preguntas_respondidas" not in st.session_state:
+        st.session_state.preguntas_respondidas = 0
+    if "pregunta_actual" not in st.session_state:
+        generar_nueva_pregunta(especies)
+
+    col1, col2 = st.columns(2)
+    col1.metric("✅ Puntaje", st.session_state.puntaje)
+    col2.metric("📝 Preguntas respondidas", st.session_state.preguntas_respondidas)
+
+    st.divider()
+
+    pregunta = st.session_state.pregunta_actual
+    st.subheader("💡 Pista:")
+    st.info(pregunta["dato_curioso"])
+    st.write("**¿A qué especie corresponde este dato curioso?**")
+
+    cols = st.columns(len(pregunta["opciones"]))
+    for i, opcion in enumerate(pregunta["opciones"]):
+        if cols[i].button(opcion, key=f"opcion_{i}_{st.session_state.preguntas_respondidas}",
+                           disabled=st.session_state.respondido):
+            st.session_state.respondido = True
+            st.session_state.preguntas_respondidas += 1
+            if opcion == pregunta["respuesta_correcta"]:
+                st.session_state.puntaje += 1
+                st.session_state.ultimo_resultado = "correcto"
+            else:
+                st.session_state.ultimo_resultado = "incorrecto"
+            st.rerun()
+
+    if st.session_state.get("respondido"):
+        if st.session_state.ultimo_resultado == "correcto":
+            st.success(f"🎉 ¡Correcto! Era {pregunta['respuesta_correcta']}.")
+        else:
+            st.error(f"❌ No era esa. La respuesta correcta era: {pregunta['respuesta_correcta']}.")
+
+        if st.button("Siguiente pregunta ➡️"):
+            generar_nueva_pregunta(especies)
+            st.rerun()
+
+
+# ------------------------------------------------------------------
 # Router
 # ------------------------------------------------------------------
 if seccion == "🤖 Asistente para docentes":
     mostrar_asistente()
-else:
+elif seccion == "🐠 Fichas de especies":
     mostrar_fichas()
+else:
+    mostrar_panel_estudiantes()
