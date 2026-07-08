@@ -20,14 +20,8 @@ import random
 import streamlit as st
 from anthropic import Anthropic
 
-# ------------------------------------------------------------------
-# Configuración general de la página
-# ------------------------------------------------------------------
 st.set_page_config(page_title="Sumérgete+", page_icon="🌊", layout="centered")
 
-# ------------------------------------------------------------------
-# Navegación simple entre secciones (sidebar)
-# ------------------------------------------------------------------
 seccion = st.sidebar.radio(
     "Navegación",
     ["🤖 Asistente para docentes", "🐠 Fichas de especies", "🎮 Panel estudiantes"],
@@ -37,21 +31,13 @@ st.sidebar.markdown("---")
 st.sidebar.caption("Sumérgete+ · MVP v0.1")
 
 
-# ------------------------------------------------------------------
-# Utilidades
-# ------------------------------------------------------------------
 @st.cache_data
 def cargar_especies():
-    """Carga las fichas de especies desde el archivo JSON local."""
     with open("data/especies.json", encoding="utf-8") as f:
         return json.load(f)
 
 
 def obtener_cliente_anthropic():
-    """
-    Crea el cliente de Anthropic usando la clave guardada en secrets.
-    Si no existe, avisa al usuario en vez de crashear la app.
-    """
     api_key = st.secrets.get("ANTHROPIC_API_KEY", None)
     if not api_key:
         st.error(
@@ -76,9 +62,6 @@ hacia cómo puedes ayudar con educación oceánica.
 """
 
 
-# ------------------------------------------------------------------
-# Sección 1: Asistente IA para docentes
-# ------------------------------------------------------------------
 def mostrar_asistente():
     st.title("🤖 Asistente para docentes")
     st.caption("Pregúntame sobre contenidos, actividades o evaluaciones de educación marina.")
@@ -112,9 +95,6 @@ def mostrar_asistente():
         st.session_state.mensajes.append({"role": "assistant", "content": texto_respuesta})
 
 
-# ------------------------------------------------------------------
-# Sección 2: Fichas de especies
-# ------------------------------------------------------------------
 def mostrar_fichas():
     st.title("🐠 Fichas de especies marinas")
 
@@ -137,9 +117,6 @@ def mostrar_fichas():
     st.info(f"💡 **Dato curioso:** {especie['dato_curioso']}")
 
 
-# ------------------------------------------------------------------
-# Sección 3: Panel de estudiantes (quiz interactivo)
-# ------------------------------------------------------------------
 def generar_nueva_pregunta(especies):
     correcta = random.choice(especies)
     otras = [e for e in especies if e["nombre_comun"] != correcta["nombre_comun"]]
@@ -161,6 +138,23 @@ def mostrar_panel_estudiantes():
     st.caption("¿Cuánto sabes de las especies marinas de Chile? ¡Pon a prueba tu conocimiento!")
 
     especies = cargar_especies()
+
+    if "nombre_estudiante" not in st.session_state:
+        st.session_state.nombre_estudiante = ""
+
+    if not st.session_state.nombre_estudiante:
+        with st.form("form_identificacion"):
+            nombre = st.text_input("Tu nombre")
+            curso = st.text_input("Tu curso (ej: 5° Básico A)")
+            enviado = st.form_submit_button("Empezar")
+            if enviado and nombre.strip():
+                st.session_state.nombre_estudiante = nombre.strip()
+                st.session_state.curso_estudiante = curso.strip()
+                st.rerun()
+        st.stop()
+
+    st.write(f"👋 Hola, **{st.session_state.nombre_estudiante}** "
+             f"({st.session_state.get('curso_estudiante', 'sin curso')})")
 
     if "puntaje" not in st.session_state:
         st.session_state.puntaje = 0
@@ -204,9 +198,6 @@ def mostrar_panel_estudiantes():
             st.rerun()
 
 
-# ------------------------------------------------------------------
-# Router
-# ------------------------------------------------------------------
 if seccion == "🤖 Asistente para docentes":
     mostrar_asistente()
 elif seccion == "🐠 Fichas de especies":
