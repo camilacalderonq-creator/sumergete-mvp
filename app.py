@@ -4,7 +4,7 @@ SUMÉRGETE+ — MVP
 App educativa marina con tres secciones:
 1. Asistente IA para docentes (chat con Claude)
 2. Fichas de especies marinas
-3. Panel estudiantes (quiz interactivo)
+3. Panel estudiantes (quiz fijo de 20 preguntas)
 
 Cómo correr localmente:
     streamlit run app.py
@@ -34,6 +34,12 @@ st.sidebar.caption("Sumérgete+ · MVP v0.1")
 @st.cache_data
 def cargar_especies():
     with open("data/especies.json", encoding="utf-8") as f:
+        return json.load(f)
+
+
+@st.cache_data
+def cargar_preguntas():
+    with open("data/preguntas.json", encoding="utf-8") as f:
         return json.load(f)
 
 
@@ -117,17 +123,20 @@ def mostrar_fichas():
     st.info(f"💡 **Dato curioso:** {especie['dato_curioso']}")
 
 
-def generar_nueva_pregunta(especies):
-    correcta = random.choice(especies)
-    otras = [e for e in especies if e["nombre_comun"] != correcta["nombre_comun"]]
+def generar_nueva_pregunta(especies, preguntas):
+    idx_pregunta = st.session_state.orden_quiz[st.session_state.indice_pregunta]
+    pregunta_data = preguntas[idx_pregunta]
+    correcta = pregunta_data["respuesta"]
+
+    otras = [e["nombre_comun"] for e in especies if e["nombre_comun"] != correcta]
     incorrectas = random.sample(otras, k=min(2, len(otras)))
 
-    opciones = [correcta["nombre_comun"]] + [e["nombre_comun"] for e in incorrectas]
+    opciones = [correcta] + incorrectas
     random.shuffle(opciones)
 
     st.session_state.pregunta_actual = {
-        "dato_curioso": correcta["dato_curioso"],
-        "respuesta_correcta": correcta["nombre_comun"],
+        "texto": pregunta_data["pregunta"],
+        "respuesta_correcta": correcta,
         "opciones": opciones,
     }
     st.session_state.respondido = False
@@ -135,9 +144,11 @@ def generar_nueva_pregunta(especies):
 
 def mostrar_panel_estudiantes():
     st.title("🎮 Panel estudiantes")
-    st.caption("¿Cuánto sabes de las especies marinas de Chile? ¡Pon a prueba tu conocimiento!")
+    st.caption("¿Cuánto sabes de las especies marinas de Chile? ¡20 preguntas te esperan!")
 
     especies = cargar_especies()
+    preguntas = cargar_preguntas()
+    total_preguntas = len(preguntas)
 
     if "nombre_estudiante" not in st.session_state:
         st.session_state.nombre_estudiante = ""
@@ -156,30 +167,44 @@ def mostrar_panel_estudiantes():
     st.write(f"👋 Hola, **{st.session_state.nombre_estudiante}** "
              f"({st.session_state.get('curso_estudiante', 'sin curso')})")
 
-    if "puntaje" not in st.session_state:
+    if "orden_quiz" not in st.session_state:
+        orden = list(range(total_preguntas))
+        random.shuffle(orden)
+        st.session_state.orden_quiz = orden
+        st.session_state.indice_pregunta = 0
         st.session_state.puntaje = 0
-    if "preguntas_respondidas" not in st.session_state:
-        st.session_state.preguntas_respondidas = 0
+
+    if st.session_state.indice_pregunta >= total_preguntas:
+        st.balloons()
+        st.success(
+            f"🏁 ¡Terminaste el quiz! Puntaje final: "
+            f"{st.session_state.puntaje} / {total_preguntas}"
+        )
+        if st.button("🔄 Jugar de nuevo"):
+            for clave in ["orden_quiz", "indice_pregunta", "puntaje", "pregunta_actual", "respondido"]:
+                st.session_state.pop(clave, None)
+            st.rerun()
+        return
+
     if "pregunta_actual" not in st.session_state:
-        generar_nueva_pregunta(especies)
+        generar_nueva_pregunta(especies, preguntas)
 
     col1, col2 = st.columns(2)
     col1.metric("✅ Puntaje", st.session_state.puntaje)
-    col2.metric("📝 Preguntas respondidas", st.session_state.preguntas_respondidas)
+    col2.metric("📝 Pregunta", f"{st.session_state.indice_pregunta + 1} / {total_preguntas}")
 
     st.divider()
 
     pregunta = st.session_state.pregunta_actual
     st.subheader("💡 Pista:")
-    st.info(pregunta["dato_curioso"])
-    st.write("**¿A qué especie corresponde este dato curioso?**")
+    st.info(pregunta["texto"])
+    st.write("**¿A qué especie corresponde esta afirmación?**")
 
     cols = st.columns(len(pregunta["opciones"]))
     for i, opcion in enumerate(pregunta["opciones"]):
-        if cols[i].button(opcion, key=f"opcion_{i}_{st.session_state.preguntas_respondidas}",
+        if cols[i].button(opcion, key=f"opcion_{i}_{st.session_state.indice_pregunta}",
                            disabled=st.session_state.respondido):
             st.session_state.respondido = True
-            st.session_state.preguntas_respondidas += 1
             if opcion == pregunta["respuesta_correcta"]:
                 st.session_state.puntaje += 1
                 st.session_state.ultimo_resultado = "correcto"
@@ -193,8 +218,11 @@ def mostrar_panel_estudiantes():
         else:
             st.error(f"❌ No era esa. La respuesta correcta era: {pregunta['respuesta_correcta']}.")
 
-        if st.button("Siguiente pregunta ➡️"):
-            generar_nueva_pregunta(especies)
+        es_ultima = st.session_state.indice_pregunta + 1 >= total_preguntas
+        texto_boton = "Ver resultado final 🏁" if es_ultima else "Siguiente pregunta ➡️"
+        if st.button(texto_boton):
+            st.session_state.indice_pregunta += 1
+            generar_nueva_pregunta(especies, preguntas)
             st.rerun()
 
 
