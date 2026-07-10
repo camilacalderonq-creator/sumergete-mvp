@@ -269,19 +269,21 @@ def mostrar_panel_estudiantes():
 
 
 def mostrar_celebracion_marina():
-    """Animación de celebración con peces y algas cayendo, en vez de confeti."""
-    emojis = ["🐟", "🐠", "🌿", "🐡", "🦀", "🌊"]
+    """Animacion de celebracion: peces, algas y burbujas suben rapido desde abajo,
+    imitando la energia de una explosion de confeti pero con tema marino."""
+    emojis = ["🐟", "🐠", "🌿", "🐡", "🦀", "🫧", "🐬", "⭐"]
     piezas = ""
-    for _ in range(28):
+    for _ in range(45):
         emoji = random.choice(emojis)
-        izquierda = random.randint(0, 95)
-        retraso = round(random.uniform(0, 1.2), 2)
-        duracion = round(random.uniform(2.2, 4.0), 2)
-        tamano = random.randint(20, 34)
+        izquierda = random.randint(0, 92)
+        retraso = round(random.uniform(0, 0.6), 2)
+        duracion = round(random.uniform(1.1, 2.0), 2)
+        tamano = random.randint(32, 58)
+        oscilacion = random.randint(-40, 40)
         piezas += (
-            f'<span class="pez-cae" style="left:{izquierda}%; '
+            f'<span class="pez-sube" style="left:{izquierda}%; '
             f'animation-delay:{retraso}s; animation-duration:{duracion}s; '
-            f'font-size:{tamano}px;">{emoji}</span>'
+            f'font-size:{tamano}px; --oscilacion:{oscilacion}px;">{emoji}</span>'
         )
 
     html = f"""
@@ -290,23 +292,26 @@ def mostrar_celebracion_marina():
     .contenedor-celebracion {{
         position: relative;
         width: 100%;
-        height: 200px;
+        height: 280px;
         overflow: hidden;
     }}
-    .pez-cae {{
+    .pez-sube {{
         position: absolute;
-        top: -40px;
-        animation-name: caer-pez;
-        animation-timing-function: ease-in;
+        bottom: -60px;
+        animation-name: subir-pez;
+        animation-timing-function: ease-out;
         animation-fill-mode: forwards;
+        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
     }}
-    @keyframes caer-pez {{
-        0%   {{ transform: translateY(0) rotate(0deg); opacity: 1; }}
-        100% {{ transform: translateY(220px) rotate(25deg); opacity: 0.15; }}
+    @keyframes subir-pez {{
+        0%   {{ transform: translateY(0) translateX(0) rotate(0deg) scale(0.4); opacity: 0; }}
+        15%  {{ opacity: 1; transform: translateY(-40px) translateX(0) rotate(-8deg) scale(1.1); }}
+        60%  {{ transform: translateY(-190px) translateX(var(--oscilacion)) rotate(10deg) scale(1); opacity: 1; }}
+        100% {{ transform: translateY(-320px) translateX(var(--oscilacion)) rotate(-6deg) scale(0.9); opacity: 0; }}
     }}
     </style>
     """
-    st.components.v1.html(html, height=200)
+    st.components.v1.html(html, height=280)
 
 
 def cargar_memorice_datos():
