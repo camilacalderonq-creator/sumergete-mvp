@@ -216,7 +216,7 @@ def mostrar_panel_estudiantes():
             )
             st.session_state.resultado_guardado = True
 
-        st.balloons()
+        mostrar_celebracion_marina()
         st.success(
             f"🏁 ¡Terminaste el quiz! Puntaje final: "
             f"{st.session_state.puntaje} / {total_preguntas}"
@@ -268,6 +268,47 @@ def mostrar_panel_estudiantes():
             st.rerun()
 
 
+def mostrar_celebracion_marina():
+    """Animación de celebración con peces y algas cayendo, en vez de confeti."""
+    emojis = ["🐟", "🐠", "🌿", "🐡", "🦀", "🌊"]
+    piezas = ""
+    for _ in range(28):
+        emoji = random.choice(emojis)
+        izquierda = random.randint(0, 95)
+        retraso = round(random.uniform(0, 1.2), 2)
+        duracion = round(random.uniform(2.2, 4.0), 2)
+        tamano = random.randint(20, 34)
+        piezas += (
+            f'<span class="pez-cae" style="left:{izquierda}%; '
+            f'animation-delay:{retraso}s; animation-duration:{duracion}s; '
+            f'font-size:{tamano}px;">{emoji}</span>'
+        )
+
+    html = f"""
+    <div class="contenedor-celebracion">{piezas}</div>
+    <style>
+    .contenedor-celebracion {{
+        position: relative;
+        width: 100%;
+        height: 200px;
+        overflow: hidden;
+    }}
+    .pez-cae {{
+        position: absolute;
+        top: -40px;
+        animation-name: caer-pez;
+        animation-timing-function: ease-in;
+        animation-fill-mode: forwards;
+    }}
+    @keyframes caer-pez {{
+        0%   {{ transform: translateY(0) rotate(0deg); opacity: 1; }}
+        100% {{ transform: translateY(220px) rotate(25deg); opacity: 0.15; }}
+    }}
+    </style>
+    """
+    st.components.v1.html(html, height=200)
+
+
 def cargar_memorice_datos():
     with open("data/memorice.json", encoding="utf-8") as f:
         return json.load(f)
@@ -307,7 +348,7 @@ def mostrar_memorice():
     col2.metric("✅ Parejas encontradas", f"{pares_encontrados} / {total_pares}")
 
     if pares_encontrados == total_pares:
-        st.balloons()
+        mostrar_celebracion_marina()
         st.success(f"🏆 ¡Completaste el memorice en {st.session_state.memorice_intentos} intentos!")
         if st.button("🔄 Jugar de nuevo"):
             inicializar_memorice(especies_memo)
