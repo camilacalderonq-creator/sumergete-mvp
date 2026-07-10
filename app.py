@@ -268,13 +268,91 @@ def mostrar_panel_estudiantes():
             st.rerun()
 
 
+def cargar_memorice_datos():
+    with open("data/memorice.json", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def inicializar_memorice(especies_memo):
+    cartas = []
+    for idx in range(len(especies_memo)):
+        cartas.append(idx)
+        cartas.append(idx)
+    random.shuffle(cartas)
+
+    st.session_state.memorice_cartas = cartas
+    st.session_state.memorice_emparejadas = set()
+    st.session_state.memorice_seleccion = []
+    st.session_state.memorice_intentos = 0
+    st.session_state.memorice_esperando = False
+
+
 def mostrar_memorice():
     st.title("🧠 Memorice peces de Chile")
-    st.caption("Encuentra las parejas de especies marinas chilenas.")
-    st.info(
-        "🚧 Esta sección está en construcción. Muy pronto vas a poder jugar "
-        "memorice con ilustraciones reales de especies marinas chilenas."
-    )
+    st.caption("Encuentra las parejas de peces de la costa chilena.")
+
+    especies_memo = cargar_memorice_datos()
+    total_pares = len(especies_memo)
+
+    if "memorice_cartas" not in st.session_state:
+        inicializar_memorice(especies_memo)
+
+    cartas = st.session_state.memorice_cartas
+    emparejadas = st.session_state.memorice_emparejadas
+    seleccion = st.session_state.memorice_seleccion
+    pares_encontrados = len(emparejadas) // 2
+
+    col1, col2 = st.columns(2)
+    col1.metric("🔄 Intentos", st.session_state.memorice_intentos)
+    col2.metric("✅ Parejas encontradas", f"{pares_encontrados} / {total_pares}")
+
+    if pares_encontrados == total_pares:
+        st.balloons()
+        st.success(f"🏆 ¡Completaste el memorice en {st.session_state.memorice_intentos} intentos!")
+        if st.button("🔄 Jugar de nuevo"):
+            inicializar_memorice(especies_memo)
+            st.rerun()
+        return
+
+    st.divider()
+
+    if st.session_state.memorice_esperando:
+        st.info("👀 Esas cartas no coinciden. Memorízalas y presiona continuar.")
+        if st.button("➡️ Continuar"):
+            st.session_state.memorice_seleccion = []
+            st.session_state.memorice_esperando = False
+            st.rerun()
+
+    columnas_por_fila = 4
+    for inicio_fila in range(0, len(cartas), columnas_por_fila):
+        cols = st.columns(columnas_por_fila)
+        for j in range(columnas_por_fila):
+            pos = inicio_fila + j
+            if pos >= len(cartas):
+                continue
+            especie_idx = cartas[pos]
+            especie = especies_memo[especie_idx]
+
+            with cols[j]:
+                if pos in emparejadas or pos in seleccion:
+                    st.image(f"data/memorice/{especie['archivo']}", use_container_width=True)
+                else:
+                    if st.button(
+                        "🌊\n\n❓",
+                        key=f"carta_memorice_{pos}",
+                        disabled=st.session_state.memorice_esperando or len(seleccion) >= 2,
+                        use_container_width=True,
+                    ):
+                        seleccion.append(pos)
+                        if len(seleccion) == 2:
+                            st.session_state.memorice_intentos += 1
+                            p1, p2 = seleccion
+                            if cartas[p1] == cartas[p2]:
+                                emparejadas.update(seleccion)
+                                st.session_state.memorice_seleccion = []
+                            else:
+                                st.session_state.memorice_esperando = True
+                        st.rerun()
 
 
 if seccion == "🤖 Asistente para docentes":
