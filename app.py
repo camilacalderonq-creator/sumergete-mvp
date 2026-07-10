@@ -1,10 +1,11 @@
 """
 SUMÉRGETE+ — MVP
 -----------------
-App educativa marina con tres secciones:
+App educativa marina con cuatro secciones:
 1. Asistente IA para docentes (chat con Claude)
 2. Fichas de especies marinas
 3. Panel estudiantes (quiz fijo de 20 preguntas)
+4. Memorice peces de Chile
 
 Cómo correr localmente:
     streamlit run app.py
@@ -17,14 +18,19 @@ como:
 
 import json
 import random
+from datetime import datetime
+
+import gspread
 import streamlit as st
 from anthropic import Anthropic
+from google.oauth2.service_account import Credentials
 
 st.set_page_config(page_title="Sumérgete+", page_icon="🌊", layout="centered")
 
 seccion = st.sidebar.radio(
     "Navegación",
-    ["🤖 Asistente para docentes", "🐠 Fichas de especies", "🎮 Panel estudiantes"],
+    ["🤖 Asistente para docentes", "🐠 Fichas de especies", "🎮 Panel estudiantes",
+     "🧠 Memorice peces de Chile"],
 )
 
 st.sidebar.markdown("---")
@@ -52,6 +58,26 @@ def obtener_cliente_anthropic():
         )
         st.stop()
     return Anthropic(api_key=api_key)
+
+
+NOMBRE_PLANILLA = "Sumérgete - Resultados Quiz"
+
+
+def guardar_resultado_en_sheets(nombre, curso, puntaje, total):
+    try:
+        credenciales_info = dict(st.secrets["gcp_service_account"])
+        alcance = [
+            "https://www.googleapis.com/auth/spreadsheets",
+            "https://www.googleapis.com/auth/drive",
+        ]
+        credenciales = Credentials.from_service_account_info(credenciales_info, scopes=alcance)
+        cliente_sheets = gspread.authorize(credenciales)
+
+        planilla = cliente_sheets.open(NOMBRE_PLANILLA).sheet1
+        fecha_hora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        planilla.append_row([nombre, curso, puntaje, total, fecha_hora])
+    except Exception as e:
+        st.warning(f"No se pudo guardar el resultado en la planilla (el quiz sigue funcionando igual). Detalle: {e}")
 
 
 SYSTEM_PROMPT = """Eres el asistente docente de Sumérgete+, una plataforma de educación
@@ -167,21 +193,37 @@ def mostrar_panel_estudiantes():
     st.write(f"👋 Hola, **{st.session_state.nombre_estudiante}** "
              f"({st.session_state.get('curso_estudiante', 'sin curso')})")
 
-    if "orden_quiz" not in st.session_state:
+    orden_invalido = (
+        "orden_quiz" in st.session_state
+        and len(st.session_state.orden_quiz) != total_preguntas
+    )
+    if "orden_quiz" not in st.session_state or orden_invalido:
         orden = list(range(total_preguntas))
         random.shuffle(orden)
         st.session_state.orden_quiz = orden
         st.session_state.indice_pregunta = 0
         st.session_state.puntaje = 0
+        st.session_state.pop("pregunta_actual", None)
+        st.session_state.pop("respondido", None)
 
     if st.session_state.indice_pregunta >= total_preguntas:
+        if not st.session_state.get("resultado_guardado"):
+            guardar_resultado_en_sheets(
+                st.session_state.nombre_estudiante,
+                st.session_state.get("curso_estudiante", ""),
+                st.session_state.puntaje,
+                total_preguntas,
+            )
+            st.session_state.resultado_guardado = True
+
         st.balloons()
         st.success(
             f"🏁 ¡Terminaste el quiz! Puntaje final: "
             f"{st.session_state.puntaje} / {total_preguntas}"
         )
         if st.button("🔄 Jugar de nuevo"):
-            for clave in ["orden_quiz", "indice_pregunta", "puntaje", "pregunta_actual", "respondido"]:
+            for clave in ["orden_quiz", "indice_pregunta", "puntaje", "pregunta_actual",
+                          "respondido", "resultado_guardado"]:
                 st.session_state.pop(clave, None)
             st.rerun()
         return
@@ -226,9 +268,20 @@ def mostrar_panel_estudiantes():
             st.rerun()
 
 
+def mostrar_memorice():
+    st.title("🧠 Memorice peces de Chile")
+    st.caption("Encuentra las parejas de especies marinas chilenas.")
+    st.info(
+        "🚧 Esta sección está en construcción. Muy pronto vas a poder jugar "
+        "memorice con ilustraciones reales de especies marinas chilenas."
+    )
+
+
 if seccion == "🤖 Asistente para docentes":
     mostrar_asistente()
 elif seccion == "🐠 Fichas de especies":
     mostrar_fichas()
-else:
+elif seccion == "🎮 Panel estudiantes":
     mostrar_panel_estudiantes()
+else:
+    mostrar_memorice()
